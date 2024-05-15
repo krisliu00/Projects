@@ -1,5 +1,5 @@
 - ```
-  python manage.py migrate --database database_alias
+  python manage.py migrate --database network
   ```
   
 - ```
@@ -11,10 +11,8 @@
   ```
 
 - ```
-  django-admin startproject Project_Commerce
+  python manage.py runserver
   ```
 
-- ```
-  python manage.py startapp auctions
-  ```
+
 

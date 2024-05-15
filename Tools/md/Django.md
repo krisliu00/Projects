@@ -17,16 +17,21 @@
 - 用meidad的步骤:
     - 在**Django**中启用media文件夹储存图片，首先在项目文件夹下面建media文件夹
     - 在*setting.py*里
+
         - *TEMPLATES*下*context_processors*加上
             ```
             django.template.context_processors.media
             ```
         - 加上
             ```
-            MEDIA_URL = '/media/'MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+            MEDIA_URL = '/media/'
+            MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
             ```
     - *urls.py*里加上
         ```
+        from django.conf import settings
+        from django.conf.urls.static import static
+
         urlpatterns = [... 
         ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
         ```
@@ -34,13 +39,93 @@
         ```
         {{ MEDIA_URL }}items/{{ item_number }}/{{ image }}
         ```
-- **MySQL**在*setting.py*里设置
-    ```
-        database 'default': {
-            'ENGINE': 'django.db.backends.mysql',  
-            'NAME': 'your_database_name',  
-            'USER': 'your_mysql_username',  
-            'PASSWORD': 'your_mysql_password',  
-            'HOST': 'localhost',  # Or the IP address/hostname of your MySQL server  
-            'PORT': '3306',       # Default MySQL port} 
-    ```
+- **MySQL**
+    - 在*setting.py*里设置
+
+        ```
+            DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'core',
+            'USER': 'admin',
+            'PASSWORD': '1234',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        },
+
+        'network': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'project_network', # yourdatabase name
+            'USER': 'admin',
+            'PASSWORD': '1234',
+            'HOST': 'localhost',
+            'PORT': '3306',
+            }
+        }
+        ```
+    -  如果把默认user的数据库改成用 **MySQL** *setting.py* 设置
+        ```
+        AUTH_USER_MODEL = 'core.CustomUser'
+        ```
+    - *AUTH_USER_MODEL*必须是default database， 否则非常麻烦
+    - 如果用两个不同的database储存不同app的数据，需要设置router, *setting.py*里加上
+        ```
+        DATABASE_ROUTERS = ['myapp.routers.netwotkRouter', 'myapp.routers.coreRouter']
+        ```
+    - router文件放在*project/myapp*里，示例如下
+        ```
+        class networkRouter:
+            
+            route_app_labels = {"network"}
+
+            def db_for_read(self, model, **hints):
+                if model._meta.app_label in self.route_app_labels:
+                    return "network"
+                return None
+
+            def db_for_write(self, model, **hints):
+
+                if model._meta.app_label in self.route_app_labels:
+                    return "network"
+                return None
+
+            def allow_relation(self, obj1, obj2, **hints):
+
+                if (
+                    obj1._meta.app_label in self.route_app_labels
+                    or obj2._meta.app_label in self.route_app_labels
+                ):
+                    return True
+                return None
+
+            def allow_migrate(self, db, app_label, model_name=None, **hints):
+
+                if app_label in self.route_app_labels:
+                    return db == "network"
+                return False
+            
+        class coreRouter:
+
+            def db_for_read(self, model, **hints):
+
+                return "default"
+
+            def db_for_write(self, model, **hints):
+
+                return "default"
+
+            def allow_relation(self, obj1, obj2, **hints):
+                """
+                Relations between objects are allowed if both objects are
+                in the primary/replica pool.
+                """
+                db_set = {"network", "default"}
+                if obj1._state.db in db_set and obj2._state.db in db_set:
+                    return True
+                return None
+
+            def allow_migrate(self, db, app_label, model_name=None, **hints):
+        
+                return True
+        ```
+    
