@@ -1,0 +1,20 @@
+#searchbar{
+    flex-basis: 40%;
+}
+
+body{
+    background-color: rgba(22, 21, 21) !important; 
+}
+
+hr{
+    color: azure;
+}
+
+#textarea, #calculatorarea{
+    background-color: rgba(39, 39, 41, 0.5) !important;
+}
+
+.hidden{
+    display: none !important;
+}
+
