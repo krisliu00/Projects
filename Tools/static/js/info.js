@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function daily(){
-      const url = 'https://raw.githubusercontent.com/krisliu00/MyLearningStuff/main/Tools/md/Daily.md'
+      const url = 'https://raw.githubusercontent.com/krisliu00/Projects/main/Tools/md/Daily.md'
       const textContent = ' '
       fetchMarkdown(url, textContent)
   }
