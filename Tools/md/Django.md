@@ -13,6 +13,54 @@
         - urls.py 里建新的urlpattern， 注意要import上一步创建好的views, .的意思是当前文件夹
     - 到上一级的文件夹里找总的*urls.py*文件，把上一步的urls文件include到urlpattern里，然后import include
 
+- 如果想要用户登录时用邮箱认证（默认是username）或者阻止已登录用户通过url进入登录或注册页面，可在app目录下创建backends/middleware.py, 代码如下
+
+    ```
+    from django.contrib.auth.backends import ModelBackend
+    from django.contrib.auth import get_user_model
+    from django.http import HttpResponseRedirect
+    from django.urls import reverse
+
+    class EmailBackend(ModelBackend):
+        def authenticate(self, request, email=None, password=None, **kwargs):
+            User = get_user_model()
+            try:
+                user = User.objects.get(email=email)
+                if user.check_password(password):
+                    return user
+            except User.DoesNotExist:
+
+                return None
+
+    class RedirectAuthenticatedUsersMiddleware:
+        def __init__(self, get_response):
+            self.get_response = get_response
+
+        def __call__(self, request):
+            if request.user.is_authenticated:
+
+                if request.path == reverse('core:login') or request.path == reverse('core:register'):
+                    return HttpResponseRedirect(reverse('network:index'))
+            
+            response = self.get_response(request)
+            return response
+
+    ```
+    然后在*setting.py*里设置如下:
+    
+    ```
+        MIDDLEWARE = [
+        # Other middleware classes...
+        # path, file_name could be backends/middle.py but just use backends/middleware here  
+        'app_name.file_name.RedirectAuthenticatedUsersMiddleware',
+    ]
+    ```
+    ```
+        AUTHENTICATION_BACKENDS = [
+        'app_name.file_name.EmailBackend', 
+        'django.contrib.auth.backends.ModelBackend',
+    ]
+    ```
 
 - 用meidad的步骤:
     - 在**Django**中启用media文件夹储存图片，首先在项目文件夹下面建media文件夹
