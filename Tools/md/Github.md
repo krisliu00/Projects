@@ -17,8 +17,15 @@
     ```
   - 在没有commit之前舍弃缓存区的内容
     ```
+    git restore --staged .
+    ```
+    ```
     git reset HEAD
     ```  
+  - 把工作区内所有文件还原为上一次add的状态（撤销所有add后的更改）
+    ```
+    git restore .
+    ```
   - 把工作区内所有的文件都还原为上一次commit的状态（撤销所有更改）
     ```
     git checkout .
@@ -31,6 +38,9 @@
     ```
     git status
     ```  
+    ```
+    git log -1
+    ```
 - 对比文件状态
   - 显示工作区和缓存区的所有更改（对比上一次commit）
     ```
