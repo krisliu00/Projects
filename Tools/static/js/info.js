@@ -84,6 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const queryFiles = document.querySelectorAll('#links-container .dropdown-item');
     const resultsContainer = document.getElementById("textarea");
     const fileNameContainer = document.getElementById("title");
+    searchTerm = searchTerm.toLowerCase();
+
     resultsContainer.innerHTML = "";
     fileNameContainer.innerHTML = "";
     let searchResults = [];
@@ -103,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (inCodeBlock) {
                             fileName = file;
                         } else {
-                            if (codeBlockContent.includes(searchTerm)) {
+                            if (codeBlockContent.toLowerCase().includes(searchTerm)) {
                                 searchResults.push({ fileName, content: codeBlockContent });
                             }
                             codeBlockContent = '';
