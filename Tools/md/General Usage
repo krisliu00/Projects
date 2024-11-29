@@ -10,3 +10,14 @@
 [System.IO.File]::SetLastWriteTime("C:\path\to\file.ext", (Get-Date "7/4/1776 00:00"))
 
 ```
+- Batch edit file creation time in a file
+```
+
+$folderPath = "C:\Users\K\Desktop\新建文件夹 (2)"
+$newCreationTime = Get-Date "2020-3-22 17:06"
+
+Get-ChildItem -Path $folderPath -File -Recurse | ForEach-Object {
+    [System.IO.File]::SetCreationTime($_.FullName, $newCreationTime)
+    Write-Host "Set creation time of $($_.FullName) to $newCreationTime"
+}
+```
