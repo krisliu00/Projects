@@ -1,0 +1,7 @@
+- To set a file's creation time with PowerShell using SetCreationTime:
+```
+[System.IO.File]::SetCreationTime("C:\path\to\file.ext", (Get-Date "8/8/2088 00:00"))
+```
+- To set the last-modified time using SetLastWriteTime:
+```
+[System.IO.File]::SetLastWriteTime("C:\path\to\file.ext", (Get-Date "7/4/1776 00:00"))
