@@ -21,3 +21,18 @@ Get-ChildItem -Path $folderPath -File -Recurse | ForEach-Object {
     Write-Host "Set creation time of $($_.FullName) to $newCreationTime"
 }
 ```
+- Batch edit file creation time auto increment time by 1 second
+```
+
+$folderPath = "C:\Users\K\Desktop\新建文件夹 (2)"
+$CreationTime = Get-Date "2020-3-22 17:06"
+$counter = 0
+
+Get-ChildItem -Path $folderPath -File -Recurse | ForEach-Object {
+    $newCreationTime = $CreationTime.AddSeconds($counter)
+    [System.IO.File]::SetCreationTime($_.FullName, $newCreationTime)
+    Write-Host "Set creation time of $($_.FullName) to $newCreationTime"
+    $counter++
+}
+
+```
