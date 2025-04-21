@@ -103,6 +103,23 @@ async function socialHousingFundValue(){
     var socialRange = [7384, 36921];
     var housingFundRange = [2690, 36921];
     var housingPercentNormal = 0.07; 
+    var forsocialsalary, forhousingsalary;
+
+    if (salary < socialRange[0]) {
+        forsocialsalary = socialRange[0];
+    } else if (salary > socialRange[1]) {
+        forsocialsalary = socialRange[1];
+    } else {
+        forsocialsalary = salary;
+    }
+
+    if (salary < housingFundRange[0]) {
+        forhousingsalary = housingFundRange[0];
+    } else if (salary > housingFundRange[1]) {
+        forhousingsalary = housingFundRange[1];
+    } else {
+        forhousingsalary = salary;
+    }
 
     if (socialBase !== null) {
         socialBase = Math.min(Math.max(socialBase, socialRange[0]), socialRange[1]);
@@ -118,8 +135,8 @@ async function socialHousingFundValue(){
     }
 
     
-    var customBaseHousing = housingBase !== null ? housingBase : salary;
-    var customBaseSocial = socialBase !== null ? socialBase : salary;
+    var customBaseHousing = housingBase !== null ? housingBase : forhousingsalary;
+    var customBaseSocial = socialBase !== null ? socialBase : forsocialsalary;
     
     return { customBaseHousing, customBaseSocial, housingPercentNormal };
 
