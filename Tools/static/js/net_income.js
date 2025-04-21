@@ -100,8 +100,8 @@ async function socialHousingFundValue(){
     var housingBase = housingBaseInput.value !== '' ? parseInt(housingBaseInput.value) : null;
     var housingPercent = housingPercentInput.value !== '' ? parseFloat(housingPercentInput.value) : null;
 
-    var socialRange = [7310, 36549];
-    var housingFundRange = [2590, 36549];
+    var socialRange = [7384, 36921];
+    var housingFundRange = [2690, 36921];
     var housingPercentNormal = 0.07; 
 
     if (socialBase !== null) {
