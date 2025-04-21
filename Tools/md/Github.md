@@ -59,7 +59,7 @@
 
 - 确认所有更新
   ```
-  git commit -m “some messages”
+  git commit -m "some messages"
   ```
 - 更新缓存一次性完成，包括所有文件
   ```
